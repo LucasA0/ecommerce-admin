@@ -63,7 +63,9 @@ export default function ProductForm({
 			</label>
 			<label>Imagens</label>
 			<div className='mb-2'>
-				<label className='w-24 h-24 text-center flex items-center justify-center flex-col text-sm gap-1 text-gray-500 rounded-lg bg-gray-200 cursor-pointer'>
+				<label
+					className='w-24 h-24 text-center flex items-center justify-center flex-col text-sm gap-1
+           text-gray-500 rounded-lg bg-gray-200 cursor-pointer'>
 					<svg
 						xmlns='http://www.w3.org/2000/svg'
 						fill='none'

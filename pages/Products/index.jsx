@@ -15,12 +15,15 @@ export default function Products() {
 	return (
 		<Layout>
 			<Link href={"/Products/New"} className='btn-primary'>
-				Add new product
+				Adicionar novo produto
 			</Link>
 			<table className='basic mt-2'>
 				<thead>
-					<tr>Product Name</tr>
-					<td></td>
+					<tr>
+						<td>
+							<h2>Nome do produto</h2>
+						</td>
+					</tr>
 				</thead>
 				<tbody>
 					{products?.map((product) => (
