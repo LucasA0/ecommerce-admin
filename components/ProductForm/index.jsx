@@ -7,6 +7,7 @@ export default function ProductForm({
 	title: prevTitle,
 	description: prevDescription,
 	price: prevPrice,
+	images,
 }) {
 	const [title, setTitle] = useState(prevTitle || "");
 	const [description, setDescription] = useState(prevDescription || "");
@@ -29,22 +30,55 @@ export default function ProductForm({
 		setRedirect(true);
 	}
 
+	async function uploadImages(ev) {
+		const files = ev.target?.files;
+		if (files?.length > 0) {
+			const data = new FormData();
+			files?.forEach((file) => data.append("file", file));
+
+			const response = await axios.post("/api/upload", data);
+
+			console.log(response.data);
+		}
+	}
+
 	if (redirect) router.push("/Products");
 
 	return (
 		<form action='' onSubmit={saveProduct}>
 			<label htmlFor='product name'>
-				Product Name
+				Nome do Produto*
 				<input
 					type='text'
 					value={title}
 					onChange={(e) => setTitle(e.target.value)}
-					placeholder='product name'
+					required
 					id='product name'
 				/>
 			</label>
+			<label>Imagens</label>
+			<div className='mb-2'>
+				<label className='w-24 h-24 text-center flex items-center justify-center flex-col text-sm gap-1 text-gray-500 rounded-lg bg-gray-200 cursor-pointer'>
+					<svg
+						xmlns='http://www.w3.org/2000/svg'
+						fill='none'
+						viewBox='0 0 24 24'
+						strokeWidth={1.5}
+						stroke='currentColor'
+						className='w-6 h-6'>
+						<path
+							strokeLinecap='round'
+							strokeLinejoin='round'
+							d='M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5'
+						/>
+					</svg>
+					<div>Upload</div>
+					<input type='file' className='hidden' onChange={uploadImages} />
+				</label>
+				{!images?.length && <div>Produto sem imagem</div>}
+			</div>
 			<label htmlFor='description'>
-				Description
+				Descrição
 				<textarea
 					name='description'
 					id='description'
@@ -52,21 +86,20 @@ export default function ProductForm({
 					rows='10'
 					value={description}
 					onChange={(e) => setDescription(e.target.value)}
-					placeholder='description'
 				/>
 			</label>
 			<label htmlFor='price'>
-				Price (in BRL)
+				Valor (em BRL)*
 				<input
 					type='number'
 					value={price}
 					onChange={(e) => setPrice(e.target.value)}
-					placeholder='price'
 					id='price'
+					required
 				/>
 			</label>
 			<button type='submit' className='btn-primary'>
-				Save
+				Salvar
 			</button>
 		</form>
 	);
