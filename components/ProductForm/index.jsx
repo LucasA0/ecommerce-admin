@@ -7,18 +7,19 @@ export default function ProductForm({
 	title: prevTitle,
 	description: prevDescription,
 	price: prevPrice,
-	images,
+	images: prevImages,
 }) {
 	const [title, setTitle] = useState(prevTitle || "");
 	const [description, setDescription] = useState(prevDescription || "");
 	const [price, setPrice] = useState(prevPrice || "");
 	const [redirect, setRedirect] = useState(false);
+	const [images, setImages] = useState(prevImages || []);
 
 	const router = useRouter();
 
 	async function saveProduct(e) {
 		e.preventDefault();
-		const data = { title, description, price };
+		const data = { title, description, price, images };
 		if (_id) {
 			// update product
 			await axios.put("/api/products", { ...data, _id });
@@ -38,12 +39,11 @@ export default function ProductForm({
 				data.append("file", file);
 			}
 
-			const response = await fetch("/api/upload", {
-				method: "POST",
-				body: data,
-			});
+			const response = await axios.post("/api/upload", data);
 
-			console.log(response);
+			setImages((oldImages) => {
+				return [...oldImages, ...response?.data?.links];
+			});
 		}
 	}
 
@@ -62,7 +62,13 @@ export default function ProductForm({
 				/>
 			</label>
 			<label>Imagens</label>
-			<div className='mb-2'>
+			<div className='mb-2 flex flex-wrap gap-2'>
+				{!!images?.length &&
+					images.map((link) => (
+						<div key={link} className='h-24'>
+							<img src={link} alt='' className='rounded-lg' />
+						</div>
+					))}
 				<label
 					className='w-24 h-24 text-center flex items-center justify-center flex-col text-sm gap-1
            text-gray-500 rounded-lg bg-gray-200 cursor-pointer'>
