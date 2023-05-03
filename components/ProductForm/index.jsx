@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 export default function ProductForm({
+	_id,
 	title: prevTitle,
 	description: prevDescription,
 	price: prevPrice,
@@ -14,17 +15,24 @@ export default function ProductForm({
 
 	const router = useRouter();
 
-	async function createProduct(e) {
+	async function saveProduct(e) {
 		e.preventDefault();
 		const data = { title, description, price };
-		await axios.post("/api/products", data);
+		if (_id) {
+			// update product
+			await axios.put("/api/products", { ...data, _id });
+		} else {
+			// create product
+			await axios.post("/api/products", data);
+		}
+
 		setRedirect(true);
 	}
 
 	if (redirect) router.push("/Products");
 
 	return (
-		<form action='' onSubmit={createProduct}>
+		<form action='' onSubmit={saveProduct}>
 			<label htmlFor='product name'>
 				Product Name
 				<input
